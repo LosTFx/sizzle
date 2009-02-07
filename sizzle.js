@@ -749,9 +749,12 @@ if ( document.getElementsByClassName && document.documentElement.getElementsByCl
 }
 
 function dirNodeCheck( dir, cur, doneName, checkSet, nodeCheck, isXML ) {
+	var sibDir = dir == "previousSibling" && !isXML;
 	for ( var i = 0, l = checkSet.length; i < l; i++ ) {
 		var elem = checkSet[i];
 		if ( elem ) {
+			if ( sibDir && elem.nodeType === 1 )
+				elem[doneName] = i;
 			elem = elem[dir];
 			var match = false;
 
@@ -779,9 +782,12 @@ function dirNodeCheck( dir, cur, doneName, checkSet, nodeCheck, isXML ) {
 }
 
 function dirCheck( dir, cur, doneName, checkSet, nodeCheck, isXML ) {
+	var sibDir = dir == "previousSibling" && !isXML;
 	for ( var i = 0, l = checkSet.length; i < l; i++ ) {
 		var elem = checkSet[i];
 		if ( elem ) {
+			if ( sibDir && elem.nodeType === 1 )
+				elem[doneName] = i;
 			elem = elem[dir];
 			var match = false;
 
