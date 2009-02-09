@@ -10,7 +10,7 @@ var chunker = /((?:\((?:\([^()]+\)|[^()]+)+\)|\[(?:\[[^[\]]*\]|['"][^'"]+['"]|[^
 	done = 0,
 	toString = Object.prototype.toString;
 
-var Sizzle = function(selector, context, results, seed) {
+var Sizzle = function(selector, context, results, seed, merge) {
 	results = results || [];
 	context = context || document;
 
@@ -31,6 +31,7 @@ var Sizzle = function(selector, context, results, seed) {
 		
 		if ( m[2] ) {
 			extra = RegExp.rightContext;
+			merge = merge || done++;
 			break;
 		}
 	}
@@ -89,7 +90,26 @@ var Sizzle = function(selector, context, results, seed) {
 		throw "Syntax error, unrecognized expression: " + (cur || selector);
 	}
 
-	if ( toString.call(checkSet) === "[object Array]" ) {
+	if (merge) {
+		if (!prune) {
+			for ( var i = 0, elem; (elem = checkSet[i]) != null; i++ ) {
+				if ( elem.merge!==merge ) {
+					elem.merge=merge;
+					results.push( elem );
+				}
+			}
+		} else {
+			for ( var i = 0, elem; (elem = checkSet[i]) != null; i++ ) {
+				if ( elem && (elem === true || elem.nodeType === 1 && contains(context, elem)) ) {
+					var s = set[i];
+					if (s.merge!==merge) {
+						s.merge=merge;
+						results.push( s );
+					}
+				}
+			}
+		}
+	} else	if ( toString.call(checkSet) === "[object Array]" ) {
 		if ( !prune ) {
 			results.push.apply( results, checkSet );
 		} else if ( context.nodeType === 1 ) {
@@ -110,7 +130,7 @@ var Sizzle = function(selector, context, results, seed) {
 	}
 
 	if ( extra ) {
-		Sizzle( extra, context, results, seed );
+		Sizzle( extra, context, results, seed, merge );
 	}
 
 	return results;
@@ -720,7 +740,7 @@ if ( document.querySelectorAll ) (function(){
 		return;
 	}
 	
-	Sizzle = function(query, context, extra, seed){
+	Sizzle = function(query, context, extra, seed, merge){
 		context = context || document;
 
 		// Only use querySelectorAll on non-XML documents
@@ -731,7 +751,7 @@ if ( document.querySelectorAll ) (function(){
 			} catch(e){}
 		}
 		
-		return oldSizzle(query, context, extra, seed);
+		return oldSizzle(query, context, extra, seed, merge);
 	};
 
 	Sizzle.find = oldSizzle.find;
