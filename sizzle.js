@@ -609,14 +609,14 @@ var Expr = Sizzle.selectors = {
 					var doneName = match[0],
 						parent = elem.parentNode;
 	
-					if ( parent && (parent.sizcache !== doneName || !elem.nodeIndex) ) {
+					if ( parent && (parent._siz && parent._siz.cache !== doneName || !elem.nodeIndex) ) {
 						var count = 0;
 						for ( node = parent.firstChild; node; node = node.nextSibling ) {
 							if ( node.nodeType === 1 ) {
 								node.nodeIndex = ++count;
 							}
 						} 
-						parent.sizcache = doneName;
+						parent._siz = { cache : doneName };
 					}
 					
 					var diff = elem.nodeIndex - last;
@@ -941,14 +941,13 @@ function dirNodeCheck( dir, cur, doneName, checkSet, nodeCheck, isXML ) {
 			var match = false;
 
 			while ( elem ) {
-				if ( elem.sizcache === doneName ) {
-					match = checkSet[elem.sizset];
+				if ( elem._siz && elem._siz.cache === doneName ) {
+					match = checkSet[elem._siz.set];
 					break;
 				}
 
 				if ( elem.nodeType === 1 && !isXML ){
-					elem.sizcache = doneName;
-					elem.sizset = i;
+					elem._siz = { cache : doneName, set : i }
 				}
 
 				if ( elem.nodeName.toLowerCase() === cur ) {
@@ -972,15 +971,14 @@ function dirCheck( dir, cur, doneName, checkSet, nodeCheck, isXML ) {
 			var match = false;
 
 			while ( elem ) {
-				if ( elem.sizcache === doneName ) {
-					match = checkSet[elem.sizset];
+				if ( elem._siz && elem._siz.cache === doneName ) {
+					match = checkSet[elem._siz.set];
 					break;
 				}
 
 				if ( elem.nodeType === 1 ) {
 					if ( !isXML ) {
-						elem.sizcache = doneName;
-						elem.sizset = i;
+						elem._siz = { cache : doneName, set : i }
 					}
 					if ( typeof cur !== "string" ) {
 						if ( elem === cur ) {
