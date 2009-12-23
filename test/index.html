@@ -3,25 +3,21 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>jQuery Test Suite</title>
-	<link rel="Stylesheet" media="screen" href="qunit/testsuite.css" />
-	<!-- Includes -->
-	<script type="text/javascript">
-		var jQuery = this.jQuery || "jQuery", // For testing .noConflict()
-			$ = this.$ || "$",
-			originaljQuery = jQuery,
-			original$ = $;
-	</script>
+	<link rel="Stylesheet" media="screen" href="qunit/qunit/qunit.css" />
 	<script type="text/javascript" src="jquery.js"></script>
-	<script type="text/javascript" src="../jquery-sizzle.js"></script>
-	<script type="text/javascript" src="qunit/testrunner.js"></script>
-	<script type="text/javascript" src="data/testrunner.js"></script>
+	<script type="text/javascript" src="../sizzle.js"></script>
+	<script type="text/javascript" src="data/sizzle-jquery.js"></script>
+	<script type="text/javascript" src="data/testinit.js"></script>
+	<script type="text/javascript" src="qunit/qunit/qunit.js"></script>
 	<script type="text/javascript" src="unit/selector.js"></script>
 </head>
 
 <body id="body">
-	<h1 id="header">jQuery Test Suite</h1>
-	<h2 id="banner"></h2>
-	<h2 id="userAgent"></h2>
+	<h1 id="qunit-header">jQuery Test Suite</h1>
+	<h2 id="qunit-banner"></h2>
+	<div id="qunit-testrunner-toolbar"></div>
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol>
 	
 	<!-- Test HTML -->
 	<div id="nothiddendiv" style="height:1px;background:white;" class="nothiddendiv">
@@ -45,6 +41,7 @@
 			<p id="sap">This link has <code><a href="#2" id="anchor2">class="blog"</a></code>: <a href="http://simon.incutio.com/" class="blog link" id="simon">Simon Willison's Weblog</a></p>
 
 		</div>
+		<span id="name+value"></span>
 		<p id="first">Try them out:</p>
 		<ul id="firstUL"></ul>
 		<ol id="empty"></ol>
@@ -62,8 +59,9 @@
 			<input type="text" style="display:none;" name="foo[bar]" id="hidden2"/>
 			
 			<input type="text" id="name" name="name" value="name" />
+			<input type="search" id="search" name="search" value="search" />
 			
-			<button id="button" name="button">Button</button>
+			<button id="button" name="button" type="button">Button</button>
 			
 			<textarea id="area1" maxlength="30">foobar</textarea>
 			
@@ -116,26 +114,6 @@
 			<input name="types[]" id="types_movie" type="checkbox" value="movie" />
 		</form>
 		
-		<div id="fx-queue">
-			<div id="fadein" class='chain test'>fadeIn<div>fadeIn</div></div>
-			<div id="fadeout" class='chain test out'>fadeOut<div>fadeOut</div></div>
-			
-			<div id="show" class='chain test'>show<div>show</div></div>
-			<div id="hide" class='chain test out'>hide<div>hide</div></div>
-			
-			<div id="togglein" class='chain test'>togglein<div>togglein</div></div>
-			<div id="toggleout" class='chain test out'>toggleout<div>toggleout</div></div>
-		
-			
-			<div id="slideup" class='chain test'>slideUp<div>slideUp</div></div>
-			<div id="slidedown" class='chain test out'>slideDown<div>slideDown</div></div>
-			
-			<div id="slidetogglein" class='chain test'>slideToggleIn<div>slideToggleIn</div></div>
-			<div id="slidetoggleout" class='chain test out'>slideToggleOut<div>slideToggleOut</div></div>
-		</div>
-		
-		<div id="fx-tests"></div>
-
 		<form id="testForm" action="#" method="get">
 			<textarea name="T3" rows="2" cols="15">?
 Z</textarea>
@@ -208,9 +186,38 @@ Z</textarea>
 			<span>...</span><a id="linkWithNoHrefWithTabIndex" tabindex="1">Eat some funyuns</a><span>...</span>
 			<span>...</span><a id="linkWithNoHrefWithNegativeTabIndex" tabindex="-1">Eat some funyuns</a><span>...</span>
 		</div>
+		
+		<div id="liveHandlerOrder">
+			<span id="liveSpan1"><a href="#" id="liveLink1"></a></span>
+			<span id="liveSpan2"><a href="#" id="liveLink2"></a></span>
+		</div>
+
+		<div id="siblingTest">
+			<em id="siblingfirst">1</em>
+			<em id="siblingnext">2</em>
+		</div>
 	</div>
 	</dl>
-	
-	<ol id="tests"></ol>
+	<div id="fx-test-group" style="position:absolute;width:1px;height:1px;overflow:hidden;">
+		<div id="fx-queue" name="test">
+			<div id="fadein" class='chain test' name='div'>fadeIn<div>fadeIn</div></div>
+			<div id="fadeout" class='chain test out'>fadeOut<div>fadeOut</div></div>
+			
+			<div id="show" class='chain test'>show<div>show</div></div>
+			<div id="hide" class='chain test out'>hide<div>hide</div></div>
+			
+			<div id="togglein" class='chain test'>togglein<div>togglein</div></div>
+			<div id="toggleout" class='chain test out'>toggleout<div>toggleout</div></div>
+		
+			
+			<div id="slideup" class='chain test'>slideUp<div>slideUp</div></div>
+			<div id="slidedown" class='chain test out'>slideDown<div>slideDown</div></div>
+			
+			<div id="slidetogglein" class='chain test'>slideToggleIn<div>slideToggleIn</div></div>
+			<div id="slidetoggleout" class='chain test out'>slideToggleOut<div>slideToggleOut</div></div>
+		</div>
+		
+		<div id="fx-tests"></div>
+	</div>
 </body>
 </html>
